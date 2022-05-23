@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 
+	"github.com/99designs/keyring"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 
@@ -29,12 +30,23 @@ func newCmd(ctx context.Context) *cobra.Command {
 	client := &cloudclient.Client{
 		Client: http.DefaultClient,
 	}
+
+	ring, err := keyring.Open(keyring.Config{
+		ServiceName:      serviceName,
+		FileDir:          "~/.calyptia",
+		FilePasswordFunc: keyring.FixedStringPrompt(""), // No password for file backend.
+	})
+	if err != nil {
+		cobra.CheckErr(fmt.Errorf("could not setup storage: %w", err))
+	}
+
 	config := &config{
 		ctx:   ctx,
 		cloud: client,
+		ring:  ring,
 	}
 
-	token, err := savedToken()
+	token, err := config.savedToken()
 	if err != nil && err != errTokenNotFound {
 		cobra.CheckErr(fmt.Errorf("could not retrive your stored token: %w", err))
 	}
@@ -94,6 +106,7 @@ func newCmd(ctx context.Context) *cobra.Command {
 type config struct {
 	ctx          context.Context
 	cloud        Client
+	ring         keyring.Keyring
 	projectToken string
 	projectID    string
 }

@@ -5,8 +5,9 @@ package main
 
 import (
 	"context"
-	cloud "github.com/calyptia/api/types"
 	"sync"
+
+	cloud "github.com/calyptia/api/types"
 )
 
 // Ensure, that ClientMock does implement Client.
