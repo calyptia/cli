@@ -8,13 +8,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/calyptia/cli/k8s"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
+
+	"github.com/calyptia/cli/k8s"
 )
 
 const (
@@ -313,7 +314,6 @@ func listDeployments(ctx context.Context, k8sClient *k8s.Client, cmd *cobra.Comm
 	deployments, err := k8sClient.AppsV1().Deployments(ns).List(ctx, metav1.ListOptions{
 		LabelSelector: label,
 	})
-
 	if err != nil {
 		return err, 0
 	}

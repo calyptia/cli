@@ -69,5 +69,4 @@ func Test_newCmdCreatePipeline(t *testing.T) {
 	wantEq(t, "FOO", call.Payload.Secrets[0].Key)
 	wantEq(t, []byte("BAR"), call.Payload.Secrets[0].Value)
 	wantEq(t, json.RawMessage([]byte(`{"foo":"bar"}`)), *call.Payload.Metadata)
-
 }
